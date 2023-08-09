@@ -1,3 +1,39 @@
+"use client";
+
 export default function Create() {
-  return <>Create!!!</>;
+  return (
+    <form
+      onSubmit={async (e) => {
+        /*
+          기본적으로 웹이 동작하는 방법이 서버쪽으로 input 데이터를 전송해야 하기 때문에 페이지가 전환된다.
+          이를 방지하기 위해 아래의 함수를 호출한다. 기본적인 동작을 막는 것이다.
+        */
+        e.preventDefault();
+        // e.target.title 하면 name이 title인 요소를 가져올 수 있다.
+        // 혹은 첫번째 요소를 가져오고 싶으면 e.target[0] 이렇게 할 수 있다.
+        const title = e.target.title.value;
+        const body = e.target.body.value;
+        const options = {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({ title, body }),
+        };
+        const response = await fetch("http://localhost:9999/topics", options);
+        const jsonData = await response.json();
+        console.log(jsonData);
+      }}
+    >
+      <p>
+        <input type="text" name="title" placeholder="title" />
+      </p>
+      <p>
+        <textarea name="body" placeholder="body" />
+      </p>
+      <p>
+        <input type="submit" value="create" />
+      </p>
+    </form>
+  );
 }
