@@ -1,5 +1,6 @@
 import Link from "next/link";
 import "./globals.css";
+import Control from "./Control";
 
 // db.json에 명령어
 // npx json-server --port 9999 --watch bd.json
@@ -11,8 +12,14 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   // 동기적으로 바꾼다.
-  const response = await fetch("http://localhost:9999/topics");
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/topics`, {
+    // 0초 동안만 캐시를 유지하겠다는 뜻
+    // next: { revalidate: 0 }
+    // 캐시를 저장하지 않겠다는 뜻
+    cache: "no-store",
+  });
   const topics = await response.json();
+  // nextjs는 한 번 가져온 정보를 저장해 둔다.
 
   return (
     <html>
@@ -28,17 +35,7 @@ export default async function RootLayout({ children }) {
           ))}
         </ol>
         {children}
-        <ol>
-          <li>
-            <a href="/create">Create</a>
-          </li>
-          <li>
-            <a href="/update/1">Update</a>
-          </li>
-          <li>
-            <input type="button" value="delete" />
-          </li>
-        </ol>
+        <Control />
       </body>
     </html>
   );

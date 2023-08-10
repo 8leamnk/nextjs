@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Inputs from "../Inputs";
 
 export default function Create() {
   // 클라이언트 컴포넌트에서만 쓸 수 있는 것인데, 생성하면 그 생성한 페이지로 리다이렉션 해주는 것이다.
@@ -26,20 +27,16 @@ export default function Create() {
           },
           body: JSON.stringify({ title, body }),
         };
-        const response = await fetch("http://localhost:9999/topics", options);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/topics`,
+          options
+        );
         const result = await response.json();
         router.push(`/read/${result.id}`);
+        router.refresh();
       }}
     >
-      <p>
-        <input type="text" name="title" placeholder="title" />
-      </p>
-      <p>
-        <textarea name="body" placeholder="body" />
-      </p>
-      <p>
-        <input type="submit" value="create" />
-      </p>
+      <Inputs />
     </form>
   );
 }

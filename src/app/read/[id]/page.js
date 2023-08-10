@@ -1,6 +1,11 @@
 export default async function Read({ params }) {
   // id값을 url에 반영하여 데이터를 가지고 온다.
-  const response = await fetch(`http://localhost:9999/topics/${params.id}`);
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/topics/${params.id}`,
+    {
+      cache: "no-store",
+    }
+  );
   const topic = await response.json();
 
   return (
