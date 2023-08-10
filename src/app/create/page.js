@@ -1,6 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 export default function Create() {
+  // 클라이언트 컴포넌트에서만 쓸 수 있는 것인데, 생성하면 그 생성한 페이지로 리다이렉션 해주는 것이다.
+  // nextjs 13 부터는 app router를 사용하는데, 이는 next/router 가 아닌 next/navigation 에서 꼭 가져와야 한다.
+  const router = useRouter();
+
   return (
     <form
       onSubmit={async (e) => {
@@ -21,8 +27,8 @@ export default function Create() {
           body: JSON.stringify({ title, body }),
         };
         const response = await fetch("http://localhost:9999/topics", options);
-        const jsonData = await response.json();
-        console.log(jsonData);
+        const result = await response.json();
+        router.push(`/read/${result.id}`);
       }}
     >
       <p>
